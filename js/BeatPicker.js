@@ -7,10 +7,14 @@ function BeatPicker(options) {
 BeatPicker.prototype = {
     dateInputNode: null,
     pickerNode: null,
+    locale: 'en',
     daysSimple: ["Su" , "Mo" , "Tu" , "We" , "Th" , "Fr" , "Sa"],
+    daysSimple_es: ["Do", "Lu", "Ma", "Mi", "Ju", "Vi", "Sa"],
     daysFull: [],
     monthsSimple: ["Jan" , "Feb" , "Mar" , "Apr"  , "May" , "Jun" , "Jul" , "Aug" , "Sep" , "Oct" , "Nov" , "Dec"],
+    monthsSimple_es: ["Ene" , "Feb" , "Mar" , "Abr"  , "May" , "Jun" , "Jul" , "Ago" , "Sep" , "Oct" , "Nov" , "Dic"],
     monthsFull: ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"],
+    monthsFull_es: ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"],
     startDate: new Date(),
     currentDate: new Date(),
     //["DD" , "MM" , "YYYY"]//["MM" , "DD" , "YYYY"]//["DD" , "NM" , "YYYY"]
@@ -26,8 +30,8 @@ BeatPicker.prototype = {
         navBar: true,
         today: true,
         gotoDate: true,
-        icon: true,
-        clear: true
+        icon: false,
+        clear: false
     },
     selectionRule: {
         single: true,
@@ -98,13 +102,19 @@ BeatPicker.prototype = {
         showOn: "click",
         hideOn: "click",
         isInputIsReadonly: true,
-        iconImage: "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAANAA0DASIAAhEBAxEB/8QAFgABAQEAAAAAAAAAAAAAAAAABgQF/8QAIxAAAQQBBAIDAQAAAAAAAAAAAQIDBBEFABIhQQYxExQiUf/EABQBAQAAAAAAAAAAAAAAAAAAAAX/xAAbEQACAgMBAAAAAAAAAAAAAAABIQAEFUFhMf/aAAwDAQACEQMRAD8Af5PxCZHiwYeRzUBuMwHPqoU0sJRdqXzVXwa9cCheqT4dl8zj4RXm4smIy3sjflwbU3yOe+K6raB1p/k8VFyTjJl/MoNhaQhLhSk7hRsD2a761lePSnV4dCo+1ptLzraUrtZoKuyomySSST/TpHK2EwuDfsOxddovp1P/2Q=="
+        iconImage: ""
     },
     labels: {
         today: "Today",
         gotoDateInput: "YYYY/MM/DD",
         gotoDateButton: "GO",
         clearButton: "Clear"
+    },
+    labels_es: {
+        today: "Hoy",
+        gotoDateInput: "YYYY/MM/DD",
+        gotoDateButton: "Ir",
+        clearButton: "Limpiar"
     },
     events: {
         select: "select",
@@ -148,6 +158,10 @@ BeatPicker.prototype = {
     constructor: function () {
         !window.beatPickerList && (window.beatPickerList = []);
         window.beatPickerList.push(this);
+        this.daysSimple = ( this.locale === 'es' ? this.daysSimple_es : this.daysSimple );
+        this.monthsSimple = ( this.locale === 'es' ? this.monthsSimple_es : this.monthsSimple );
+        this.monthsFull = ( this.locale === 'es' ? this.monthsFull_es : this.monthsFull );
+        this.labels = ( this.locale === 'es' ? this.labels_es : this.labels );
         this._enhanceLibFunctions();
         this._setStartDate(this.startDate);
         this._disablingRuleEngine();

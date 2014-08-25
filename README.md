@@ -1,6 +1,8 @@
 BeatPicker
 ==========
 
+**All credits to:** https://github.com/ACT1GMR
+
 Simple and powerful date picker widget for jQuery
 ## Dependencies
 * jQuery1.8.0+
@@ -8,6 +10,17 @@ Simple and powerful date picker widget for jQuery
 * BeatPicker.min.css
 
 ## Links
+* [Original repo](https://github.com/ACT1GMR/BeatPicker)
 * [Download page](http://act1gmr.github.io/BeatPicker/)
 * [Live demo](http://act1gmr.github.io/BeatPicker/demos.html)
 * [Docs](http://act1gmr.github.io/BeatPicker/docs.html)
+
+## Disclaimer from @SebastianOsuna
+This repo has been modified for my own needs. Refer to the original repo for updates and support.
+
+## Changes from original
+* Icon and clear modules disabled by default.
+* Icon data removed to reduce file size.
+* Added Spanish support.
+
+``` var options = {dateInputNode:$("input"), locale: 'es'}; ```
