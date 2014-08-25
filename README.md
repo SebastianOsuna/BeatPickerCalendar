@@ -24,3 +24,6 @@ This repo has been modified for my own needs. Refer to the original repo for upd
 * Added Spanish support.
 
 ``` var options = {dateInputNode:$("input"), locale: 'es'}; ```
+
+* Removed readonly property as default
+* Added 'Declarative syntax' support for locale (only Spanish)

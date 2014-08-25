@@ -101,7 +101,7 @@ BeatPicker.prototype = {
         position: ["bottom" , "left"],
         showOn: "click",
         hideOn: "click",
-        isInputIsReadonly: true,
+        isInputIsReadonly: false,
         iconImage: ""
     },
     labels: {
@@ -1375,7 +1375,8 @@ initializeBitCal = function () {
             _interpretDisableRules(elem),
             _interpretRange(elem),
             _interpretDateFormat(elem),
-            _interpretDisablingModule(elem));
+            _interpretDisablingModule(elem),
+            _interpretLocale(elem));
 
         _initialization(elem, options);
 
@@ -1432,6 +1433,11 @@ _interpretDateFormat = function (elem) {
     var dateFormatArray = dateFormat.substr(0, iDateArray + 1);
     var separator = dateFormat.substr(iDateArray + 2, dateFormat.length);
     return {dateFormat: $.extend({format: _parseJsonEngine(dateFormatArray, [])}, separator ? _parseJsonEngine("{" + separator + "}", ["separator"]) : {separator: "-"})};
+};
+_interpretLocale = function (elem) {
+    var locale = elem.data("beatpicker-locale");
+    if (!locale) return null;
+    return {locale: locale};
 };
 _interpretExtraOptions = function (elem) {
     var extraOptions = elem.data("beatpicker-extra");
