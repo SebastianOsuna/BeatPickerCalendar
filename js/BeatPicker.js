@@ -36,7 +36,8 @@ BeatPicker.prototype = {
     selectionRule: {
         single: true,
         range: false,
-        rangeDisableSelect: false
+        rangeDisableSelect: false,
+        multiple: false
     },
     className: {
         beatPicker: "beatpicker",
@@ -139,6 +140,7 @@ BeatPicker.prototype = {
     _calendarMainNode: null,
     _selectedDateNode: null,
     _selectedDate: null,
+    _selectedDates: [],
     _startRangeSelectedDate: null,
     _startRangeSelectedDateBk: null,
     _startRangeSelectedNode: null,
@@ -166,6 +168,7 @@ BeatPicker.prototype = {
         this._setStartDate(this.startDate);
         this._disablingRuleEngine();
         this._prepareInput();
+        this.selectionRule.single = !this.selectionRule.multiple && this.selectionRule.single; 
         //MAIN
         var calendar = this._calendarMainNode = this.pickerNode = this._baseDom();
         this._eventAndPositioning();
@@ -257,7 +260,18 @@ BeatPicker.prototype = {
                         endDate: self._endRangeSelectedDate,
                         endDateString: self._endRangeSelectedDate ? self._dateFormatting(self._endRangeSelectedDate) : null
                     });
-                else if (self.selectionRule.single)
+                else if (self.selectionRule.multiple) {
+                    // TODO: what is the clear module?
+                    var i;
+                    if ((i = self._selectedDates.indexOf(self._selectedDate) > 0))
+                        self._selectedDates.splice(i, 1);
+                    else
+                        self._selectedDates.push(self._selectedDate)
+                    $.extend(options, {
+                        dates: self._selectedDates,
+                        strings: self._selectedDates.map(function (d) { self._dateFormatting(d); })
+                    });
+                } else if (self.selectionRule.single)
                     $.extend(options, {
                         date: self._selectedDate,
                         string: self._dateFormatting(self._selectedDate)
@@ -375,7 +389,15 @@ BeatPicker.prototype = {
                 });
                 li.text(dayCheck.day);
                 this.selectionRule.single && this._findSelectedDate(this._dateRows[i].data("date"), this._dateRows[i])
-
+                 if (this.selectionRule.multiple) {
+                    for (var j = 0; j < this._selectedDates.length; j++) {
+                        var d = this._selectedDates[j];
+                        if (d.getFullYear() === this._dateRows[i].data('date').getFullYear() &&
+                            d.getMonth() === this._dateRows[i].data('date').getMonth() &&
+                            d.getDate() === this._dateRows[i].data('date').getDate())
+                            this._addClassToSelectedDate(this._dateRows[i]); 
+                    }
+                }
             }
             this._markToday(new Date());
             if (this.selectionRule.range)
@@ -622,6 +644,28 @@ BeatPicker.prototype = {
             this._addClassToSelectedDate(this._selectedDateNode);
             optionToNotify = {dateObj: dateObj, string: date, timeStamp: new Date().getDate()};
             this._notifySubscribers(this.events.select, optionToNotify);
+        } else if (this.selectionRule.multiple) {
+            var d = new Date(dateObj.getTime());
+            var i = -1;
+            for (var j = 0; j < this._selectedDates.length; j++) {
+                if (this._selectedDates[j].getTime() === d.getTime()) {
+                    i = j;
+                    break;
+                }
+            }
+            if (i === -1) {
+                this._selectedDates.push(d);
+                this._addClassToSelectedDate(elem);
+            } else {
+                this._selectedDates.splice(i, 1);
+                this._removeClassFromSelectedDate(elem);
+            }
+            var str = this._selectedDates.map(function (dd) {
+                return this._dateFormatting(dd);
+            }.bind(this)).join(', ');
+            this.dateInputNode.val(str);
+            optionToNotify = {dates: this._selectedDates, string: str, timeStamp: new Date().getDate()};
+            this._notifySubscribers(this.events.select, optionToNotify);
         } else if (this.selectionRule.range) {
             if (this._isFromDateOpened) {
                 this._startRangeSelectedDateBk = dateObj;
@@ -709,12 +753,21 @@ BeatPicker.prototype = {
                 this._dateRows[i].data("click-behaviour", objectDateInfo.isNextMonth);
                 $(this._dateRows[i]).text("").text(objectDateInfo.day);
                 this.selectionRule.single && this._findSelectedDate(this._dateRows[i].data("date"), this._dateRows[i])
+                if (this.selectionRule.multiple) {
+                    this._removeClassFromSelectedDate(this._dateRows[i]);
+                    for (var j = 0; j < this._selectedDates.length; j++) {
+                        var d = this._selectedDates[j];
+                        if (d.getFullYear() === this._dateRows[i].data('date').getFullYear() &&
+                            d.getMonth() === this._dateRows[i].data('date').getMonth() &&
+                            d.getDate() === this._dateRows[i].data('date').getDate())
+                            this._addClassToSelectedDate(this._dateRows[i]); 
+                    }
+                }
             }
             if (this.selectionRule.range)
                 this._addClassToRange(this._startRangeSelectedDate, this._endRangeSelectedDate);
             this._markToday(new Date());
             this._currentBriefDateSet(this._currentIndicator, this._briefDateScope.briefDate);
-
         } else {
             if (this.view.display === this._displaySet.months) {
                 this._updateMonths();

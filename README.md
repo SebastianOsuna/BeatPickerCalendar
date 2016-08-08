@@ -27,3 +27,12 @@ This repo has been modified for my own needs. Refer to the original repo for upd
 
 * Removed readonly property as default
 * Added 'Declarative syntax' support for locale (only Spanish)
+* Added support to select multiple dates
+
+```javascript
+var options = {selectionRules: { multiple: false }};
+elem.on('select', function (event) {
+  // event = {dates: [], string: 'date1, date2', timeStamp: now)};
+});
+```
+

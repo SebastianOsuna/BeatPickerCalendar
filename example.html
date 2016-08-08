@@ -3,14 +3,14 @@
 <head lang="en">
     <meta charset="UTF-8">
     <title></title>
-    <link rel="stylesheet" href="/css/BeatPicker.css">
+    <link rel="stylesheet" href="css/BeatPicker.css">
 </head>
 <body>
     <input type="text" />
     <script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
-    <script src="/js/BeatPicker.js"></script>
+    <script src="js/BeatPicker.js"></script>
 <script>
-    var options = {dateInputNode:$("input"), locale: 'es'};
+    var options = {dateInputNode:$("input"), locale: 'es', selectionRule: { multiple: true }};
     var instance = new BeatPicker(options)
 </script>
 </body>
