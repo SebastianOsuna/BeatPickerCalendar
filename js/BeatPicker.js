@@ -857,13 +857,14 @@ BeatPicker.prototype = {
     //FORMATTING
     _dateFormatting: function (date) {
         var day = date.getDate(), month = date.getMonth() + 1, year = date.getFullYear();
-        var isNM = this.dateFormat.format[0] == 'NM' || this.dateFormat.format[1] == 'NM' || this.dateFormat.format[2] == 'NM';
+        var isNM = this.dateFormat.format.indexOf('NM') > -1 || this.dateFormat.format.indexOf('SM') > -1;
         var dateMap = {
             DD: +day >= 10 || isNM ? +day : "0" + day,
             MM: month >= 10 ? month : "0" + month,
             YYYY: year,
             YY: String(year).substr(2),
-            NM: this.monthsFull[+month - 1]
+            NM: this.monthsFull[+month - 1],
+            SM: this.monthsSimple[+month-1]
         };
         var dateSeparator = this.dateFormat.separator;
         var dateString = "";

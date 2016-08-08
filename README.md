@@ -36,3 +36,12 @@ elem.on('select', function (event) {
 });
 ```
 
+* Added support for simple months name
+
+```
+var options = {dateFormat: { format: ['YYYY', 'SM', 'DD'] }}
+// 2016-Aug-08
+var options = {dateFormat: { format: ['YYYY', 'NM', 'DD'] }}
+// 2016-August-08
+```
+
