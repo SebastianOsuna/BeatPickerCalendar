@@ -17,6 +17,7 @@ BeatPicker.prototype = {
     monthsFull_es: ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"],
     startDate: new Date(),
     currentDate: new Date(),
+    selectedDates: [],
     //["DD" , "MM" , "YYYY"]//["MM" , "DD" , "YYYY"]//["DD" , "NM" , "YYYY"]
     //["YYYY" , "MM" , "DD"]
     dateFormat: {
@@ -166,6 +167,8 @@ BeatPicker.prototype = {
         this.labels = ( this.locale === 'es' ? this.labels_es : this.labels );
         this._enhanceLibFunctions();
         this._setStartDate(this.startDate);
+        if (this.selectionRule.multiple && this.selectedDates && this.selectedDates.length)
+            this._setSelectedDates(this.selectedDates);
         this._disablingRuleEngine();
         this._prepareInput();
         this.selectionRule.single = !this.selectionRule.multiple && this.selectionRule.single; 
@@ -209,6 +212,13 @@ BeatPicker.prototype = {
     //*************INITIAL BASE VALUES**************//
     //**********************************************//
     //**********************************************//
+    _setSelectedDates: function (datesStr) {
+        if (typeof datesStr === "string")
+            this._setSelectedDates(datesStr.split(','));
+        else if (datesStr instanceof Array)
+            this._selectedDates = datesStr.map(function (date) { return new Date(date); })
+        this.currentDate = this._selectedDates[0] || this.startDate || this.currentDate;
+    },
     _setStartDate: function (dateOb) {
 
         if (typeof dateOb === "string")
